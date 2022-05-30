@@ -12,7 +12,7 @@ contract MetadataPrinter is IMetadataPrinter {
     function metadata(uint256 tokenID) public view override returns (string memory) {
         BadgeOfAssembly badger = BadgeOfAssembly(msg.sender);
         JsonWriter.Json memory writer;
-        (string memory name, string memory description, string memory image, string memory animationUrl, string memory youtubeUrl, address _minter) = badger.metadata(tokenID);
+        (string memory name, string memory description, string memory image, string memory animationUrl, string memory youtubeUrl,) = badger.metadata(tokenID);
 
         writer = writer.writeStartObject();
         writer = writer.writeStringProperty("name", name);
