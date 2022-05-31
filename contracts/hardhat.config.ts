@@ -4,6 +4,7 @@ import { HardhatUserConfig, task } from "hardhat/config";
 import "hardhat-deploy";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
+import "./tasks";
 
 dotenv.config();
 
@@ -21,7 +22,15 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // Go to https://hardhat.org/config/ to learn more
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.14",
+  solidity: {
+    version: "0.8.14",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
   namedAccounts: {
     deployer: {
       default: 0, // here this will by default take the first account as deployer
@@ -33,6 +42,13 @@ const config: HardhatUserConfig = {
       accounts:
         process.env.MUMBAI_PRIVATE_KEY !== undefined
           ? [process.env.MUMBAI_PRIVATE_KEY]
+          : [],
+    },
+    matic: {
+      url: "https://polygon-rpc.com/",
+      accounts:
+        process.env.POLYGON_PRIVATE_KEY !== undefined
+          ? [process.env.POLYGON_PRIVATE_KEY]
           : [],
     },
   },

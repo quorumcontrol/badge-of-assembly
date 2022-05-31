@@ -23,6 +23,6 @@ contract MetadataPrinter is IMetadataPrinter {
         writer = writer.writeEndObject();
 
         return
-            string.concat("data:application/json;base64", Base64.encode(bytes(writer.value)));
+            string.concat("data:application/json;base64,", Base64.encode(bytes(writer.value)));
     }
 }

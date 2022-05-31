@@ -84,12 +84,22 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
       return nextId;
     }
 
-    function mint(address to, uint256 tokenID, uint256 amount) public {
+    function mint(address to, uint256 tokenID, uint256 amount) public returns (bool) {
         BadgeMetadata storage meta = metadata[tokenID];
         if(meta.minter != msgSender()) {
           revert Unauthorized();
         }
         _mint(to, tokenID, amount, "");
+        return true;
+    }
+
+    function changeMinter(uint256 tokenID, address newMinter) public returns (bool) {
+        BadgeMetadata storage meta = metadata[tokenID];
+        if(meta.minter != msgSender()) {
+          revert Unauthorized();
+        }
+        meta.minter = newMinter;
+        return true;
     }
 
     function msgSender() private view returns (address) {
