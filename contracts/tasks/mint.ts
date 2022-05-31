@@ -2,11 +2,12 @@ import "@nomiclabs/hardhat-ethers";
 import { constants } from "ethers";
 import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { BadgeOfAssembly__factory } from "../typechain";
 
 const minterContractAddress = "0xB788d5C6eA489DB4671d78B19717e983F2248219";
 
 async function getBadgeOfAssemblyContract(hre: HardhatRuntimeEnvironment) {
+  const { BadgeOfAssembly__factory } = await import("../typechain");
+
   const signer = (await hre.ethers.getSigners())[0];
 
   return BadgeOfAssembly__factory.connect(minterContractAddress, signer);
