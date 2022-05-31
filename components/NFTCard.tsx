@@ -1,6 +1,6 @@
 import { Box, Flex, Image, Spacer, Text } from "@chakra-ui/react";
 import React from "react";
-import { MetadataWithId } from "../../hooks/BadgeOfAssembly";
+import { MetadataWithId } from "../hooks/BadgeOfAssembly";
 
 function typeFromUrl(animationUrl: string) {
   if (animationUrl.includes(".mp4")) {
