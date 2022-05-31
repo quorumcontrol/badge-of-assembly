@@ -9,10 +9,9 @@ const Mint: NextPage = () => {
       <Head>
         <title>Badge of Assembly: Mint</title>
         <meta name="description" content="Mint a new badge" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <Text>mint</Text>
+        <Text>coming soon.</Text>
       </Layout>
 
     </>
