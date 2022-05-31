@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "pages", "contracts/typechain"],
+  "include": ["next-env.d.ts", "pages", "contracts/typechain", "hooks"],
   "exclude": ["node_modules"]
 }

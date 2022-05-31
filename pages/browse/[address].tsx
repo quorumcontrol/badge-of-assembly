@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
-import { MetadataWithId, useUserBadges } from "../hooks/BadgeOfAssembly";
+import { MetadataWithId, useUserBadges } from "../../hooks/BadgeOfAssembly";
 
 const Browse: NextPage = () => {
   const router = useRouter();

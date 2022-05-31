@@ -2,8 +2,8 @@ import { BigNumber, constants } from "ethers"
 import { useMemo } from "react"
 import { useInfiniteQuery, useQuery } from "react-query"
 import { useProvider } from "wagmi"
-import { BadgeOfAssembly, BadgeOfAssembly__factory } from "../../contracts/typechain"
-import ThenArg from "../utils/ThenArg"
+import { BadgeOfAssembly, BadgeOfAssembly__factory } from "../contracts/typechain"
+import ThenArg from "./utils/ThenArg"
 
 const BADGE_OF_ASSEMBLY_ADDRESS = '0x845d123Ba9c8465CD0f9593620Ad3A8dEFAB4c12'
 
