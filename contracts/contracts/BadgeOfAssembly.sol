@@ -5,12 +5,15 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+
 import "./interfaces/IMetadataPrinter.sol";
 
 error Unauthorized();
 
 contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
     using Counters for Counters.Counter;
+    using EnumerableSet for EnumerableSet.UintSet;
 
     struct BadgeMetadata {
       string name;
@@ -27,9 +30,11 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
     string public _contractURI = "https://badge-of-assembly.netlify.app/api/boa";
 
     IMetadataPrinter private _metadataPrinter;
-
     Counters.Counter private _tokenId;
+    mapping (address => EnumerableSet.UintSet) private _userTokens;
+    
     mapping (uint => BadgeMetadata) public metadata;
+    
 
     constructor(address metadataPrinter) ERC1155("") {
         _setupRole(MINTER_ROLE, msg.sender);
@@ -80,7 +85,10 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
       uint nextId = _tokenId.current();
       metadata[nextId] = _metadata;
       metadata[nextId].minter = msgSender();
-      _mint(msgSender(), nextId, initialSupply, "");
+      if (initialSupply > 0) {
+        _mint(msgSender(), nextId, initialSupply, "");
+        _userTokens[msgSender()].add(nextId);
+      }
       return nextId;
     }
 
@@ -90,6 +98,7 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
           revert Unauthorized();
         }
         _mint(to, tokenID, amount, "");
+        _userTokens[msgSender()].add(tokenID);
         return true;
     }
 
@@ -100,6 +109,10 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         }
         meta.minter = newMinter;
         return true;
+    }
+
+    function userTokens(address userId) external view returns (uint[] memory) {
+      return _userTokens[userId].values();
     }
 
     function msgSender() private view returns (address) {
