@@ -84,12 +84,12 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
       return nextId;
     }
 
-    function mint(address to, uint256 amount) public {
-        // Check that the calling account has the minter role
-        if(!hasRole(MINTER_ROLE, msg.sender)) {
+    function mint(address to, uint256 tokenID, uint256 amount) public {
+        BadgeMetadata storage meta = metadata[tokenID];
+        if(meta.minter != msgSender()) {
           revert Unauthorized();
         }
-        _mint(to, 0, amount, "");
+        _mint(to, tokenID, amount, "");
     }
 
     function msgSender() private view returns (address) {
