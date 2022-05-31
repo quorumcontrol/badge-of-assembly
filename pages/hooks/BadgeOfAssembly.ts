@@ -1,11 +1,11 @@
 import { BigNumber, constants } from "ethers"
 import { useMemo } from "react"
-import { useInfiniteQuery } from "react-query"
+import { useInfiniteQuery, useQuery } from "react-query"
 import { useProvider } from "wagmi"
 import { BadgeOfAssembly, BadgeOfAssembly__factory } from "../../contracts/typechain"
 import ThenArg from "../utils/ThenArg"
 
-const BADGE_OF_ASSEMBLY_ADDRESS = '0xB788d5C6eA489DB4671d78B19717e983F2248219'
+const BADGE_OF_ASSEMBLY_ADDRESS = '0x845d123Ba9c8465CD0f9593620Ad3A8dEFAB4c12'
 
 const useBadgeOfAssembly = () => {
   const provider = useProvider()
@@ -13,6 +13,23 @@ const useBadgeOfAssembly = () => {
   return useMemo(() => {
     return BadgeOfAssembly__factory.connect(BADGE_OF_ASSEMBLY_ADDRESS, provider)
   }, [provider])
+}
+
+export const useUserBadges = (address?:string) => {
+  const badgeOfAssembly = useBadgeOfAssembly()
+  const fetchUserTokens = async () => {
+    const userTokenIds = await badgeOfAssembly.userTokens(address!)
+    return Promise.all(userTokenIds.map(async (tokenId) => {
+      const metadata = await badgeOfAssembly.metadata(tokenId)
+      return {
+        ...metadata,
+        id: tokenId,
+      }
+    }))
+  }
+  return useQuery(['user-tokens', address], fetchUserTokens, {
+    enabled: !!address
+  })
 }
 
 export type MetadataWithId = ThenArg<ReturnType<BadgeOfAssembly['metadata']>> & { id: BigNumber }

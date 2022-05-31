@@ -20,9 +20,8 @@ import { publicProvider } from 'wagmi/providers/public';
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.polygonMumbai],
+  [chain.polygonMumbai],
   [
-    alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }),
     publicProvider()
   ]
 );
