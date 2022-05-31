@@ -17,9 +17,10 @@ import {
 } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const { chains, provider } = configureChains(
-  [chain.mainnet],
+  [chain.mainnet, chain.polygonMumbai],
   [
     alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }),
     publicProvider()
@@ -60,8 +61,12 @@ const theme = extendTheme({
   },
 });
 
+const queryClient = new QueryClient()
+
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
+    <QueryClientProvider client={queryClient}>
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains} theme={darkTheme({
         ...darkTheme.accentColors.orange,
@@ -82,6 +87,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       </ChakraProvider>
       </RainbowKitProvider>
     </WagmiConfig>
+    </QueryClientProvider>
   );
 }
 
