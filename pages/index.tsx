@@ -1,7 +1,7 @@
 import { VStack, Text, Heading } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Layout from './components/Layout'
+import Layout from '../components/Layout'
 
 const Home: NextPage = () => {
   return (

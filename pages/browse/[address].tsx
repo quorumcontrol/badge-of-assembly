@@ -1,9 +1,9 @@
 import { Text, HStack } from "@chakra-ui/react";
-import NFTCard from '../components/NFTCard'
+import NFTCard from '../../components/NFTCard'
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 import { MetadataWithId, useUserBadges } from "../../hooks/BadgeOfAssembly";
 
 const Browse: NextPage = () => {

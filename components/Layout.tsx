@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Flex, Stack, VStack, Box, Heading } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "../../assets/images/logo.svg";
+import logo from "../assets/images/logo.svg";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {

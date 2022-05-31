@@ -15,7 +15,6 @@ import {
   createClient,
   WagmiConfig,
 } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { QueryClient, QueryClientProvider } from "react-query";
 
