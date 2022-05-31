@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
-import { useUserBadges } from "../hooks/BadgeOfAssembly";
+import { MetadataWithId, useUserBadges } from "../hooks/BadgeOfAssembly";
 
 const Browse: NextPage = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const Browse: NextPage = () => {
       <Layout>
         <Text>Badges held by: {address}</Text>
         <HStack>
-          {data?.map((metadata, i) => {
+          {data?.map((metadata:MetadataWithId, i) => {
             return <NFTCard metadata={metadata} key={`nftcard-${i}`} />;
           })}
         </HStack>
