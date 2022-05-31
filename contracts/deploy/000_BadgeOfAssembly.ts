@@ -8,12 +8,20 @@ const func: DeployFunction = async function ({
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  await deploy("BadgeOfAssembly", {
+  const metadataPrinter = await deploy("MetadataPrinter", {
     from: deployer,
     gasLimit: 4000000,
     log: true,
     deterministicDeployment: true,
     args: [],
+  });
+
+  await deploy("BadgeOfAssembly", {
+    from: deployer,
+    gasLimit: 4000000,
+    log: true,
+    deterministicDeployment: true,
+    args: [metadataPrinter.address],
   });
 };
 export default func;
