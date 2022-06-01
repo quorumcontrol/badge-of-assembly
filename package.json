@@ -16,6 +16,7 @@
     "@fontsource/dm-sans": "^4.5.7",
     "@fontsource/zen-dots": "^4.5.7",
     "@rainbow-me/rainbowkit": "^0.2.1",
+    "@typechain/ethers-v5": "^10.0.0",
     "@web3-ui/components": "^0.12.0",
     "@web3-ui/core": "^0.8.1",
     "@web3-ui/hooks": "^0.13.0",
