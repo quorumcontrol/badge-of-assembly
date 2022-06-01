@@ -42,7 +42,7 @@ export const useAllTokens = () => {
       return badgeOfAssembly.metadata(pageParam + i)
     }))
     const isMetadataBlank = (meta: typeof metadata[0]) => {
-      return meta.name === '' && meta.minter == constants.AddressZero
+      return meta.name === ''
     }
     const isFinished = metadata.some(isMetadataBlank)
     console.log("use all tokens, isFinished: ", isFinished)
