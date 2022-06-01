@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { BigNumber, ethers, providers, Wallet } from "ethers";
+import { BigNumber, ethers, Wallet } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { chain } from "wagmi";
