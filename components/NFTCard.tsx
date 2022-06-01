@@ -2,14 +2,24 @@ import { Box, Flex, Image, Spacer, Text } from "@chakra-ui/react";
 import React from "react";
 import { MetadataWithId } from "../hooks/BadgeOfAssembly";
 
+function ipfsToWeb(url:string) {
+  if (!url.startsWith('ipfs://')) {
+    return url
+  }
+  return url.replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
+}
+
 function typeFromUrl(animationUrl: string) {
+  if (animationUrl === '') {
+    return undefined
+  }
   if (animationUrl.includes(".mp4")) {
     return "video/mp4";
   }
   if (animationUrl.includes(".webm")) {
     return "video/webm";
   }
-  return undefined;
+  return "video/mp4";
 }
 
 const Video: React.FC<{ animationUrl: string }> = ({ animationUrl }) => {
@@ -27,7 +37,7 @@ const Video: React.FC<{ animationUrl: string }> = ({ animationUrl }) => {
         objectFit: "contain",
       }}
     >
-      <source src={animationUrl} type={typeFromUrl(animationUrl)} />
+      <source src={ipfsToWeb(animationUrl)} type={typeFromUrl(animationUrl)} />
     </video>
   );
 };
@@ -48,7 +58,7 @@ const NFTCard: React.FC<{ metadata: MetadataWithId }> = ({
           <Video animationUrl={animationUrl} />
         ) : (
           <Image
-            src={image}
+            src={ipfsToWeb(image)}
             alt={`image of ${name}`}
             style={{
               minWidth: "100%",

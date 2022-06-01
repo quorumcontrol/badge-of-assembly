@@ -18,7 +18,7 @@ const Browse: NextPage = () => {
         <meta name="description" content="browse badges" />
       </Head>
       <Layout>
-        <Text>Badges held by: {address}</Text>
+        <Text fontSize="sm">Badges held by: {address}</Text>
         <HStack>
           {data?.map((metadata:MetadataWithId, i) => {
             return <NFTCard metadata={metadata} key={`nftcard-${i}`} />;
