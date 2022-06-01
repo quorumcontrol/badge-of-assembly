@@ -14,8 +14,8 @@ const Browse: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Badge of Assembly: Browse</title>
-        <meta name="description" content="browse badges" />
+        <title>Badge of Assembly: User Badges</title>
+        <meta name="description" content={`Badges for ${address}`} />
       </Head>
       <Layout>
         <Text fontSize="sm">Badges held by: {address}</Text>
