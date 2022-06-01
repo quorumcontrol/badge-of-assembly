@@ -5,7 +5,7 @@ import { useProvider } from "wagmi"
 import { BadgeOfAssembly, BadgeOfAssembly__factory } from "../contracts/typechain"
 import ThenArg from "./utils/ThenArg"
 
-const BADGE_OF_ASSEMBLY_ADDRESS = '0xbFB5f1E6dC0F5066cbeCe0887e618b6C65ba5240'
+export const BADGE_OF_ASSEMBLY_ADDRESS = '0xbFB5f1E6dC0F5066cbeCe0887e618b6C65ba5240'
 
 const useBadgeOfAssembly = () => {
   const provider = useProvider()
