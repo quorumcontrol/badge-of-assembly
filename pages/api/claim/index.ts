@@ -3,7 +3,7 @@ import { BigNumber, ethers, Wallet } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { chain } from "wagmi";
-import { getMainnetSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
+import { Skl__factory } from '../../../eth-sdk/contracts'
 import { BadgeOfAssembly__factory } from "../../../contracts/typechain";
 import { BADGE_OF_ASSEMBLY_ADDRESS } from "../../../hooks/BadgeOfAssembly";
 import { skaleTestnet } from '../../../hooks/utils/SkaleChains'
@@ -19,7 +19,7 @@ if (!process.env.BADGE_MINTER_PRIVATE_KEY) {
   throw new Error("must have a badge minter private key")
 }
 
-const sdk = getMainnetSdk(mainnetProvider)
+const skl = Skl__factory.connect(SKL_ADDRESS, mainnetProvider)
 
 const schainProvider = new ethers.providers.JsonRpcProvider(skaleTestnet.rpcUrls.default)
 const schainSigner = new Wallet(process.env.BADGE_MINTER_PRIVATE_KEY!).connect(schainProvider)
@@ -39,7 +39,7 @@ export default async function handler(
   const address = JSON.parse(req.body).address
   const [balance,stakedBalance] = await Promise.all([
     fetchBalance(address),
-    sdk.skl.callStatic.getAndUpdateDelegatedAmount(address),
+    skl.callStatic.getAndUpdateDelegatedAmount(address),
   ])
   if (balance.add(stakedBalance).gte(threshold)) {
     // fake succeeding transaction:
