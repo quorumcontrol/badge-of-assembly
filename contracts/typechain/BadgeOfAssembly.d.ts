@@ -22,19 +22,21 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
   functions: {
     "ADMIN_ROLE()": FunctionFragment;
+    "CREATOR_ROLE()": FunctionFragment;
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
-    "MINTER_ROLE()": FunctionFragment;
     "_contractURI()": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "changeMinter(uint256,address)": FunctionFragment;
     "contractURI()": FunctionFragment;
+    "gatedAccess()": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "metadata(uint256)": FunctionFragment;
     "mint(address,uint256,uint256)": FunctionFragment;
+    "minters(uint256,address)": FunctionFragment;
+    "mints(uint256,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
@@ -44,11 +46,13 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setContractURI(string)": FunctionFragment;
     "setMetadataPrinter(address)": FunctionFragment;
-    "setup((string,string,string,string,string,address),uint256)": FunctionFragment;
+    "setMinterAccess(uint256,address,bool)": FunctionFragment;
+    "setOpenToThePublic(bool)": FunctionFragment;
+    "setup((string,string,string,string,string,uint256),uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenAdminOf(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
-    "updateMetadata(uint256,(string,string,string,string,string,address))": FunctionFragment;
+    "updateMetadata(uint256,(string,string,string,string,string,uint256))": FunctionFragment;
     "uri(uint256)": FunctionFragment;
     "userTokens(address)": FunctionFragment;
   };
@@ -58,11 +62,11 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "DEFAULT_ADMIN_ROLE",
+    functionFragment: "CREATOR_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "MINTER_ROLE",
+    functionFragment: "DEFAULT_ADMIN_ROLE",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -78,11 +82,11 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     values: [string[], BigNumberish[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "changeMinter",
-    values: [BigNumberish, string]
+    functionFragment: "contractURI",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "contractURI",
+    functionFragment: "gatedAccess",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -108,6 +112,14 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "mint",
     values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "minters",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mints",
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -143,6 +155,14 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setMinterAccess",
+    values: [BigNumberish, string, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setOpenToThePublic",
+    values: [boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setup",
     values: [
       {
@@ -151,7 +171,7 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       BigNumberish
     ]
@@ -178,7 +198,7 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       }
     ]
   ): string;
@@ -187,11 +207,11 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(functionFragment: "ADMIN_ROLE", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "DEFAULT_ADMIN_ROLE",
+    functionFragment: "CREATOR_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "MINTER_ROLE",
+    functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -204,11 +224,11 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "changeMinter",
+    functionFragment: "contractURI",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "contractURI",
+    functionFragment: "gatedAccess",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -223,6 +243,8 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "metadata", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "minters", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mints", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -251,6 +273,14 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setMetadataPrinter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMinterAccess",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setOpenToThePublic",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setup", data: BytesLike): Result;
@@ -392,9 +422,9 @@ export class BadgeOfAssembly extends BaseContract {
   functions: {
     ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
+    CREATOR_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    MINTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     _contractURI(overrides?: CallOverrides): Promise<[string]>;
 
@@ -410,13 +440,9 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    changeMinter(
-      tokenID: BigNumberish,
-      newMinter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     contractURI(overrides?: CallOverrides): Promise<[string]>;
+
+    gatedAccess(overrides?: CallOverrides): Promise<[boolean]>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
 
@@ -442,13 +468,13 @@ export class BadgeOfAssembly extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, string, string, string, string] & {
+      [string, string, string, string, string, BigNumber] & {
         name: string;
         description: string;
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumber;
       }
     >;
 
@@ -458,6 +484,18 @@ export class BadgeOfAssembly extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    minters(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    mints(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
@@ -511,6 +549,18 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setMinterAccess(
+      tokenID: BigNumberish,
+      minter: string,
+      canMint: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setOpenToThePublic(
+      isOpen: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setup(
       _metadata: {
         name: string;
@@ -518,7 +568,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       initialSupply: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -547,7 +597,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -562,9 +612,9 @@ export class BadgeOfAssembly extends BaseContract {
 
   ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+  CREATOR_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
+  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -580,13 +630,9 @@ export class BadgeOfAssembly extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  changeMinter(
-    tokenID: BigNumberish,
-    newMinter: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   contractURI(overrides?: CallOverrides): Promise<string>;
+
+  gatedAccess(overrides?: CallOverrides): Promise<boolean>;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -612,13 +658,13 @@ export class BadgeOfAssembly extends BaseContract {
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, string, string, string, string] & {
+    [string, string, string, string, string, BigNumber] & {
       name: string;
       description: string;
       image: string;
       animationUrl: string;
       youtubeUrl: string;
-      minter: string;
+      maxPerWallet: BigNumber;
     }
   >;
 
@@ -628,6 +674,18 @@ export class BadgeOfAssembly extends BaseContract {
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  minters(
+    arg0: BigNumberish,
+    arg1: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  mints(
+    arg0: BigNumberish,
+    arg1: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
@@ -681,6 +739,18 @@ export class BadgeOfAssembly extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setMinterAccess(
+    tokenID: BigNumberish,
+    minter: string,
+    canMint: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setOpenToThePublic(
+    isOpen: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setup(
     _metadata: {
       name: string;
@@ -688,7 +758,7 @@ export class BadgeOfAssembly extends BaseContract {
       image: string;
       animationUrl: string;
       youtubeUrl: string;
-      minter: string;
+      maxPerWallet: BigNumberish;
     },
     initialSupply: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -714,7 +784,7 @@ export class BadgeOfAssembly extends BaseContract {
       image: string;
       animationUrl: string;
       youtubeUrl: string;
-      minter: string;
+      maxPerWallet: BigNumberish;
     },
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -726,9 +796,9 @@ export class BadgeOfAssembly extends BaseContract {
   callStatic: {
     ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+    CREATOR_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     _contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -744,13 +814,9 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    changeMinter(
-      tokenID: BigNumberish,
-      newMinter: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     contractURI(overrides?: CallOverrides): Promise<string>;
+
+    gatedAccess(overrides?: CallOverrides): Promise<boolean>;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
 
@@ -776,13 +842,13 @@ export class BadgeOfAssembly extends BaseContract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, string, string, string, string] & {
+      [string, string, string, string, string, BigNumber] & {
         name: string;
         description: string;
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumber;
       }
     >;
 
@@ -792,6 +858,18 @@ export class BadgeOfAssembly extends BaseContract {
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    minters(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    mints(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -843,6 +921,18 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    setMinterAccess(
+      tokenID: BigNumberish,
+      minter: string,
+      canMint: boolean,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    setOpenToThePublic(
+      isOpen: boolean,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     setup(
       _metadata: {
         name: string;
@@ -850,7 +940,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       initialSupply: BigNumberish,
       overrides?: CallOverrides
@@ -876,7 +966,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -1057,9 +1147,9 @@ export class BadgeOfAssembly extends BaseContract {
   estimateGas: {
     ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+    CREATOR_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    MINTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     _contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1075,13 +1165,9 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    changeMinter(
-      tokenID: BigNumberish,
-      newMinter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
+
+    gatedAccess(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRoleAdmin(
       role: BytesLike,
@@ -1113,6 +1199,18 @@ export class BadgeOfAssembly extends BaseContract {
       tokenID: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    minters(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    mints(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1167,6 +1265,18 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setMinterAccess(
+      tokenID: BigNumberish,
+      minter: string,
+      canMint: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setOpenToThePublic(
+      isOpen: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setup(
       _metadata: {
         name: string;
@@ -1174,7 +1284,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       initialSupply: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1200,7 +1310,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -1213,11 +1323,11 @@ export class BadgeOfAssembly extends BaseContract {
   populateTransaction: {
     ADMIN_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    CREATOR_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     DEFAULT_ADMIN_ROLE(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    MINTER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     _contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1233,13 +1343,9 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    changeMinter(
-      tokenID: BigNumberish,
-      newMinter: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    gatedAccess(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getRoleAdmin(
       role: BytesLike,
@@ -1274,6 +1380,18 @@ export class BadgeOfAssembly extends BaseContract {
       tokenID: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    minters(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    mints(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1328,6 +1446,18 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setMinterAccess(
+      tokenID: BigNumberish,
+      minter: string,
+      canMint: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setOpenToThePublic(
+      isOpen: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setup(
       _metadata: {
         name: string;
@@ -1335,7 +1465,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       initialSupply: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1364,7 +1494,7 @@ export class BadgeOfAssembly extends BaseContract {
         image: string;
         animationUrl: string;
         youtubeUrl: string;
-        minter: string;
+        maxPerWallet: BigNumberish;
       },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

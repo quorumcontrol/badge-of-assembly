@@ -1,5 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+import { BigNumber } from "ethers";
 import { constants } from "ethers";
 import { ethers } from "hardhat";
 import {
@@ -18,6 +19,7 @@ function rawMetaToObject(rawMetadataUri: string) {
 
 describe("BadgeOfAssembly", function () {
   let deployer: SignerWithAddress;
+  let alice: SignerWithAddress;
   let boa: BadgeOfAssembly;
 
   const metadata = {
@@ -26,12 +28,13 @@ describe("BadgeOfAssembly", function () {
     image: "https://test",
     animationUrl: "test",
     youtubeUrl: "test",
-    minter: constants.AddressZero,
+    maxPerWallet: BigNumber.from(1),
   };
 
   before(async () => {
     const accts = await ethers.getSigners();
     deployer = accts[0];
+    alice = accts[1];
 
     const MetadataPrinterFactory = new MetadataPrinter__factory(deployer);
     const metadataPrinter = await MetadataPrinterFactory.deploy();
@@ -55,10 +58,14 @@ describe("BadgeOfAssembly", function () {
   it("updates metadata", async () => {
     await boa.updateMetadata(1, {
       ...metadata,
-      minter: deployer.address,
       name: "new name",
     });
     const newMeta = rawMetaToObject(await boa.uri(1));
     expect(newMeta.name).to.equal("new name");
+  });
+
+  it("enforces max mints", async () => {
+    await expect(boa.mint(alice.address, 1, 1)).to.not.be.reverted;
+    await expect(boa.mint(alice.address, 1, 1)).to.be.reverted;
   });
 });

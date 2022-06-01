@@ -18,8 +18,12 @@ task("setup")
   .addParam("image")
   .addOptionalParam("animationUrl")
   .addOptionalParam("youtubeUrl")
+  .addOptionalParam("maxPerWallet")
   .setAction(
-    async ({ name, description, image, animationUrl, youtubeUrl }, hre) => {
+    async (
+      { name, description, image, animationUrl, youtubeUrl, maxPerWallet },
+      hre
+    ) => {
       const boa = await getBadgeOfAssemblyContract(hre);
       const tx = await boa.setup(
         {
@@ -27,8 +31,8 @@ task("setup")
           description,
           image,
           animationUrl,
-          youtubeUrl,
-          minter: constants.AddressZero,
+          youtubeUrl: youtubeUrl || "",
+          maxPerWallet: maxPerWallet || 0,
         },
         1
       );

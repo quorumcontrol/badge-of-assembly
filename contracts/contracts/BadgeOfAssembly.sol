@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-
 import "./interfaces/IMetadataPrinter.sol";
 
 error Unauthorized();
+error AlreadyClaimed();
 
 contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
     using Counters for Counters.Counter;
@@ -21,10 +21,11 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         string image;
         string animationUrl;
         string youtubeUrl;
-        address minter;
+        uint256 maxPerWallet;
     }
 
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bool public gatedAccess = true;
+    bytes32 public constant CREATOR_ROLE = keccak256("CREATOR_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     string public _contractURI =
@@ -34,11 +35,13 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
     Counters.Counter private _tokenId;
     mapping(address => EnumerableSet.UintSet) private _userTokens;
     mapping(address => EnumerableSet.UintSet) private _badgeAdmin;
-
     mapping(uint256 => BadgeMetadata) public metadata;
+    mapping(uint256 => mapping(address => bool)) public minters;
+
+    mapping(uint256 => mapping(address => uint256)) public mints;
 
     constructor(address metadataPrinter) ERC1155("") {
-        _setupRole(MINTER_ROLE, msg.sender);
+        _setupRole(CREATOR_ROLE, msg.sender);
         _setupRole(ADMIN_ROLE, msg.sender);
         _transferOwnership(msg.sender);
         _metadataPrinter = IMetadataPrinter(metadataPrinter);
@@ -59,6 +62,14 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
 
     function contractURI() public view returns (string memory) {
         return _contractURI;
+    }
+
+    function setOpenToThePublic(bool isOpen) external returns (bool) {
+        if (!hasRole(ADMIN_ROLE, msgSender())) {
+            revert Unauthorized();
+        }
+        gatedAccess = isOpen;
+        return true;
     }
 
     function setContractURI(string calldata newContractURI)
@@ -88,11 +99,14 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         external
         returns (uint256)
     {
+        address sender = msgSender();
+        if (gatedAccess && !hasRole(CREATOR_ROLE, sender)) {
+            revert Unauthorized();
+        }
         _tokenId.increment();
         uint256 nextId = _tokenId.current();
-        address sender = msgSender();
         metadata[nextId] = _metadata;
-        metadata[nextId].minter = sender;
+        minters[nextId][sender] = true;
         if (initialSupply > 0) {
             _mint(sender, nextId, initialSupply, "");
             _userTokens[sender].add(nextId);
@@ -101,33 +115,50 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         return nextId;
     }
 
+    function isMinter(uint256 tokenID, address user)
+        private
+        view
+        returns (bool)
+    {
+        return minters[tokenID][user];
+    }
+
     function mint(
         address to,
         uint256 tokenID,
         uint256 amount
     ) public returns (bool) {
-        BadgeMetadata storage meta = metadata[tokenID];
-        if (meta.minter != msgSender()) {
+        if (!isMinter(tokenID, msgSender())) {
             revert Unauthorized();
         }
+        uint256 oldCount = mints[tokenID][to];
+        uint256 max = metadata[tokenID].maxPerWallet;
+        if (max > 0 && oldCount + amount > max) {
+            revert AlreadyClaimed();
+        }
+        mints[tokenID][to] = oldCount + amount;
         _mint(to, tokenID, amount, "");
-        _userTokens[msgSender()].add(tokenID);
+        _userTokens[to].add(tokenID);
         return true;
     }
 
-    function changeMinter(uint256 tokenID, address newMinter)
-        public
-        returns (bool)
-    {
-        BadgeMetadata storage meta = metadata[tokenID];
+    function setMinterAccess(
+        uint256 tokenID,
+        address minter,
+        bool canMint
+    ) public returns (bool) {
         address sender = msgSender();
-        if (meta.minter != sender) {
+        if (!isMinter(tokenID, sender)) {
             revert Unauthorized();
         }
-        _badgeAdmin[meta.minter].remove(tokenID);
-        meta.minter = newMinter;
-        _badgeAdmin[newMinter].add(tokenID);
+        if (canMint) {
+            _badgeAdmin[minter].add(tokenID);
+            minters[tokenID][minter] = true;
+            return true;
+        }
 
+        minters[tokenID][minter] = false;
+        _badgeAdmin[minter].remove(tokenID);
         return true;
     }
 
@@ -147,10 +178,11 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         return _badgeAdmin[user].values();
     }
 
-    function updateMetadata(uint256 tokenID, BadgeMetadata calldata newMetadata) external returns (bool) {
-        BadgeMetadata storage existingMetadata = metadata[tokenID];
-
-        if (existingMetadata.minter != msgSender()) {
+    function updateMetadata(uint256 tokenID, BadgeMetadata calldata newMetadata)
+        external
+        returns (bool)
+    {
+        if (!isMinter(tokenID, msgSender())) {
             revert Unauthorized();
         }
         metadata[tokenID] = newMetadata;

@@ -10,7 +10,7 @@ import {
   darkTheme,
 } from '@rainbow-me/rainbowkit';
 import {
-  chain,
+  chain as namedChains,
   configureChains,
   createClient,
   WagmiConfig,
@@ -24,8 +24,12 @@ const { chains, provider } = configureChains(
   [
     jsonRpcProvider({
       rpc: (chain) => {
-        if (chain.id !== skaleTestnet.id) return null
-        return { http: chain.rpcUrls.default }
+        switch(chain.id) {
+          case skaleTestnet.id:
+            return { http: chain.rpcUrls.default }
+          default:
+            return null
+        }        
       },
     }),
   ]
