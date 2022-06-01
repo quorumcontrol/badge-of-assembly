@@ -74,7 +74,7 @@ const Mint: NextPage = () => {
   const { data } = useSKLBalance(accountData?.address);
   console.log(data);
   const isDomReady = useIsClientSide();
-  const canClaim = data && data.gte(threshold);
+  const canClaim = data && data.total.gte(threshold);
 
   if (!isDomReady) {
     return (
@@ -97,7 +97,8 @@ const Mint: NextPage = () => {
         <meta name="description" content="Claim your Antiqui Posessor" />
       </Head>
       <Layout>
-        <Text>SKL Balance: {data && formatEther(data)}</Text>
+        <Text>Unstaked SKL Balance: {data && formatEther(data.liquid)}</Text>
+        <Text>Staked SKL Balance: {data && formatEther(data.staked)}</Text>
         {canClaim && isFetched && accountData && (
           <ClaimButton address={accountData.address!} />
         )}
