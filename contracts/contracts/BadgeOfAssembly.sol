@@ -16,25 +16,26 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
     using EnumerableSet for EnumerableSet.UintSet;
 
     struct BadgeMetadata {
-      string name;
-      string description;
-      string image;
-      string animationUrl;
-      string youtubeUrl;
-      address minter;
+        string name;
+        string description;
+        string image;
+        string animationUrl;
+        string youtubeUrl;
+        address minter;
     }
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    string public _contractURI = "https://badge-of-assembly.netlify.app/api/boa";
+    string public _contractURI =
+        "https://badge-of-assembly.netlify.app/api/boa";
 
     IMetadataPrinter private _metadataPrinter;
     Counters.Counter private _tokenId;
-    mapping (address => EnumerableSet.UintSet) private _userTokens;
-    
-    mapping (uint => BadgeMetadata) public metadata;
-    
+    mapping(address => EnumerableSet.UintSet) private _userTokens;
+    mapping(address => EnumerableSet.UintSet) private _badgeAdmin;
+
+    mapping(uint256 => BadgeMetadata) public metadata;
 
     constructor(address metadataPrinter) ERC1155("") {
         _setupRole(MINTER_ROLE, msg.sender);
@@ -60,62 +61,104 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         return _contractURI;
     }
 
-    function setContractURI(string calldata newContractURI) external returns (bool) {
-      if (!hasRole(ADMIN_ROLE, msgSender())) {
-        revert Unauthorized();
-      }
-      _contractURI = newContractURI;
-      return true;
+    function setContractURI(string calldata newContractURI)
+        external
+        returns (bool)
+    {
+        if (!hasRole(ADMIN_ROLE, msgSender())) {
+            revert Unauthorized();
+        }
+        _contractURI = newContractURI;
+        return true;
     }
 
     function setMetadataPrinter(address newContract) external returns (bool) {
-      if (!hasRole(ADMIN_ROLE, msgSender())) {
-        revert Unauthorized();
-      }
-      _metadataPrinter = IMetadataPrinter(newContract);
-      return true;
+        if (!hasRole(ADMIN_ROLE, msgSender())) {
+            revert Unauthorized();
+        }
+        _metadataPrinter = IMetadataPrinter(newContract);
+        return true;
     }
 
-    function uri(uint tokenID) override public view returns (string memory) {
-      return _metadataPrinter.metadata(tokenID);
+    function uri(uint256 tokenID) public view override returns (string memory) {
+        return _metadataPrinter.metadata(tokenID);
     }
 
-    function setup(BadgeMetadata calldata _metadata, uint initialSupply) external returns (uint) {
-      _tokenId.increment();
-      uint nextId = _tokenId.current();
-      metadata[nextId] = _metadata;
-      metadata[nextId].minter = msgSender();
-      if (initialSupply > 0) {
-        _mint(msgSender(), nextId, initialSupply, "");
-        _userTokens[msgSender()].add(nextId);
-      }
-      return nextId;
+    function setup(BadgeMetadata calldata _metadata, uint256 initialSupply)
+        external
+        returns (uint256)
+    {
+        _tokenId.increment();
+        uint256 nextId = _tokenId.current();
+        address sender = msgSender();
+        metadata[nextId] = _metadata;
+        metadata[nextId].minter = sender;
+        if (initialSupply > 0) {
+            _mint(sender, nextId, initialSupply, "");
+            _userTokens[sender].add(nextId);
+        }
+        _badgeAdmin[sender].add(nextId);
+        return nextId;
     }
 
-    function mint(address to, uint256 tokenID, uint256 amount) public returns (bool) {
+    function mint(
+        address to,
+        uint256 tokenID,
+        uint256 amount
+    ) public returns (bool) {
         BadgeMetadata storage meta = metadata[tokenID];
-        if(meta.minter != msgSender()) {
-          revert Unauthorized();
+        if (meta.minter != msgSender()) {
+            revert Unauthorized();
         }
         _mint(to, tokenID, amount, "");
         _userTokens[msgSender()].add(tokenID);
         return true;
     }
 
-    function changeMinter(uint256 tokenID, address newMinter) public returns (bool) {
+    function changeMinter(uint256 tokenID, address newMinter)
+        public
+        returns (bool)
+    {
         BadgeMetadata storage meta = metadata[tokenID];
-        if(meta.minter != msgSender()) {
-          revert Unauthorized();
+        address sender = msgSender();
+        if (meta.minter != sender) {
+            revert Unauthorized();
         }
+        _badgeAdmin[meta.minter].remove(tokenID);
         meta.minter = newMinter;
+        _badgeAdmin[newMinter].add(tokenID);
+
         return true;
     }
 
-    function userTokens(address userId) external view returns (uint[] memory) {
-      return _userTokens[userId].values();
+    function userTokens(address userId)
+        external
+        view
+        returns (uint256[] memory)
+    {
+        return _userTokens[userId].values();
+    }
+
+    function tokenAdminOf(address user)
+        external
+        view
+        returns (uint256[] memory)
+    {
+        return _badgeAdmin[user].values();
+    }
+
+    function updateMetadata(uint256 tokenID, BadgeMetadata calldata newMetadata) external returns (bool) {
+        BadgeMetadata storage existingMetadata = metadata[tokenID];
+
+        if (existingMetadata.minter != msgSender()) {
+            revert Unauthorized();
+        }
+        metadata[tokenID] = newMetadata;
+
+        return true;
     }
 
     function msgSender() private view returns (address) {
-      return msg.sender;
+        return msg.sender;
     }
 }

@@ -46,7 +46,9 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     "setMetadataPrinter(address)": FunctionFragment;
     "setup((string,string,string,string,string,address),uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "tokenAdminOf(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "updateMetadata(uint256,(string,string,string,string,string,address))": FunctionFragment;
     "uri(uint256)": FunctionFragment;
     "userTokens(address)": FunctionFragment;
   };
@@ -159,8 +161,26 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "tokenAdminOf",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateMetadata",
+    values: [
+      BigNumberish,
+      {
+        name: string;
+        description: string;
+        image: string;
+        animationUrl: string;
+        youtubeUrl: string;
+        minter: string;
+      }
+    ]
   ): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "userTokens", values: [string]): string;
@@ -239,7 +259,15 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "tokenAdminOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateMetadata",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
@@ -501,8 +529,26 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    tokenAdminOf(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateMetadata(
+      tokenID: BigNumberish,
+      newMetadata: {
+        name: string;
+        description: string;
+        image: string;
+        animationUrl: string;
+        youtubeUrl: string;
+        minter: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -653,8 +699,23 @@ export class BadgeOfAssembly extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  tokenAdminOf(user: string, overrides?: CallOverrides): Promise<BigNumber[]>;
+
   transferOwnership(
     newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateMetadata(
+    tokenID: BigNumberish,
+    newMetadata: {
+      name: string;
+      description: string;
+      image: string;
+      animationUrl: string;
+      youtubeUrl: string;
+      minter: string;
+    },
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -800,10 +861,25 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    tokenAdminOf(user: string, overrides?: CallOverrides): Promise<BigNumber[]>;
+
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    updateMetadata(
+      tokenID: BigNumberish,
+      newMetadata: {
+        name: string;
+        description: string;
+        image: string;
+        animationUrl: string;
+        youtubeUrl: string;
+        minter: string;
+      },
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     uri(tokenID: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -1109,8 +1185,23 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    tokenAdminOf(user: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateMetadata(
+      tokenID: BigNumberish,
+      newMetadata: {
+        name: string;
+        description: string;
+        image: string;
+        animationUrl: string;
+        youtubeUrl: string;
+        minter: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1255,8 +1346,26 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    tokenAdminOf(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     transferOwnership(
       newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateMetadata(
+      tokenID: BigNumberish,
+      newMetadata: {
+        name: string;
+        description: string;
+        image: string;
+        animationUrl: string;
+        youtubeUrl: string;
+        minter: string;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
