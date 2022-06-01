@@ -40,10 +40,10 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
 
     mapping(uint256 => mapping(address => uint256)) public mints;
 
-    constructor(address metadataPrinter) ERC1155("") {
-        _setupRole(CREATOR_ROLE, msg.sender);
-        _setupRole(ADMIN_ROLE, msg.sender);
-        _transferOwnership(msg.sender);
+    constructor(address metadataPrinter, address initialOwner) ERC1155("") {
+        _setupRole(CREATOR_ROLE, initialOwner);
+        _setupRole(ADMIN_ROLE, initialOwner);
+        _transferOwnership(initialOwner);
         _metadataPrinter = IMetadataPrinter(metadataPrinter);
     }
 

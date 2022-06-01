@@ -1,13 +1,13 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { BigNumber } from "ethers";
-import { constants } from "ethers";
 import { ethers } from "hardhat";
 import {
   BadgeOfAssembly,
   BadgeOfAssembly__factory,
   MetadataPrinter__factory,
 } from "../typechain";
+import { getBadgeOfAssemblyContract } from "../tasks/helpers";
 
 const preface = "data:application/json;base64,";
 
@@ -40,7 +40,7 @@ describe("BadgeOfAssembly", function () {
     const metadataPrinter = await MetadataPrinterFactory.deploy();
     await metadataPrinter.deployed();
     const BadgeOfAssemblyFactory = new BadgeOfAssembly__factory(deployer);
-    boa = await BadgeOfAssemblyFactory.deploy(metadataPrinter.address);
+    boa = await BadgeOfAssemblyFactory.deploy(metadataPrinter.address, deployer.address);
     await boa.deployed();
     await boa.setup(metadata, 1);
   });

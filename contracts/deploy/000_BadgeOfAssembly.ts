@@ -21,7 +21,7 @@ const func: DeployFunction = async function ({
     gasLimit: 4000000,
     log: true,
     deterministicDeployment: true,
-    args: [metadataPrinter.address],
+    args: [metadataPrinter.address, deployer],
   });
 };
 export default func;
