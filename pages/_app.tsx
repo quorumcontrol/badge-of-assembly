@@ -15,13 +15,19 @@ import {
   createClient,
   WagmiConfig,
 } from 'wagmi';
-import { publicProvider } from 'wagmi/providers/public';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { QueryClient, QueryClientProvider } from "react-query";
+import { skaleTestnet } from "../hooks/utils/SkaleChains";
 
 const { chains, provider } = configureChains(
-  [chain.polygonMumbai],
+  [skaleTestnet],
   [
-    publicProvider()
+    jsonRpcProvider({
+      rpc: (chain) => {
+        if (chain.id !== skaleTestnet.id) return null
+        return { http: chain.rpcUrls.default }
+      },
+    }),
   ]
 );
 

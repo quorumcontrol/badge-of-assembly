@@ -17,7 +17,7 @@ const Browse: NextPage = () => {
       </Head>
       <Layout>
         <Text>All Badges</Text>
-        <HStack>
+        <HStack spacing="10">
         {data?.pages.map((group, i) => {
           return (
             <React.Fragment key={i}>

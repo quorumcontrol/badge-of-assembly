@@ -19,7 +19,7 @@ const Browse: NextPage = () => {
       </Head>
       <Layout>
         <Text fontSize="sm">Badges held by: {address}</Text>
-        <HStack>
+        <HStack spacing="10">
           {data?.map((metadata:MetadataWithId, i) => {
             return <NFTCard metadata={metadata} key={`nftcard-${i}`} />;
           })}
