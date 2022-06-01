@@ -32,12 +32,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Spacer />
         <Link href="/mint">mint</Link>
         <Link href="/browse">all</Link>
-        {isClientReady && isSuccess && (
-          <Box pr="5">
+        {isClientReady && isSuccess && data?.address && (
           <Link href={`/browse/${data?.address}`}>mine</Link>
-          </Box>
         )}
-        <ConnectButton showBalance={false} />
+        <Box ml="5">
+          <ConnectButton showBalance={false} />
+        </Box>
       </HStack>
 
       <VStack mt="10" spacing={5}>
