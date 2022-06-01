@@ -1,4 +1,4 @@
-import { Text, HStack } from "@chakra-ui/react";
+import { Text, HStack, Spinner } from "@chakra-ui/react";
 import NFTCard from '../../components/NFTCard'
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -9,7 +9,7 @@ import { MetadataWithId, useUserBadges } from "../../hooks/BadgeOfAssembly";
 const Browse: NextPage = () => {
   const router = useRouter();
   const { address } = router.query;
-  const { data } = useUserBadges(address as (string | undefined));
+  const { data, isLoading } = useUserBadges(address as (string | undefined));
 
   return (
     <>
@@ -20,6 +20,7 @@ const Browse: NextPage = () => {
       <Layout>
         <Text fontSize="sm">Badges held by: {address}</Text>
         <HStack spacing="10">
+          { isLoading && <Spinner />}
           {data?.map((metadata:MetadataWithId, i) => {
             return <NFTCard metadata={metadata} key={`nftcard-${i}`} />;
           })}
