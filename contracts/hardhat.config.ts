@@ -43,6 +43,7 @@ const config: HardhatUserConfig = {
         process.env.MUMBAI_PRIVATE_KEY !== undefined
           ? [process.env.MUMBAI_PRIVATE_KEY]
           : [],
+      tags: ['testpolygon', 'test']
     },
     matic: {
       url: "https://polygon-rpc.com/",
@@ -50,6 +51,13 @@ const config: HardhatUserConfig = {
         process.env.POLYGON_PRIVATE_KEY !== undefined
           ? [process.env.POLYGON_PRIVATE_KEY]
           : [],
+    },
+    skaletest: {
+      url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
+      // gasPrice: 0,
+      accounts:
+        process.env.SKALE_TEST_PRIVATE_KEY !== undefined ? [process.env.SKALE_TEST_PRIVATE_KEY] : [],
+      tags: ['test', 'testskale']
     },
   },
 };
