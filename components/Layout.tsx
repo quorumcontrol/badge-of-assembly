@@ -8,6 +8,7 @@ import {
   Heading,
   HStack,
   Spacer,
+  Text,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +19,7 @@ import useIsClientSide from "../hooks/useIsClientSide";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data, isSuccess } = useAccount();
-  const isClientReady = useIsClientSide()
+  const isClientReady = useIsClientSide();
 
   return (
     <Container p={10} maxW="1200px">
@@ -43,12 +44,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <VStack mt="10" spacing={5}>
         {children}
       </VStack>
-      <Box as="footer" mt="200">
-        <VStack spacing={5}>
+      <Box as="footer" mt="200" textAlign="center">
+        <Text fontSize="sm">
           <Link href="https://larvamaiorum.com/">
-            Crypto Colosseum: Larva Maiorum
+            Provided by Crypto Colosseum: Larva Maiorum
           </Link>
-        </VStack>
+        </Text>
       </Box>
     </Container>
   );
