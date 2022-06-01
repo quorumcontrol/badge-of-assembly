@@ -15,6 +15,10 @@ const mainnetProvider = new ethers.providers.AlchemyProvider(
   process.env.NEXT_PUBLIC_ALCHEMY_KEY
 );
 
+if (!process.env.BADGE_MINTER_PRIVATE_KEY) {
+  throw new Error("must have a badge minter private key")
+}
+
 const schainProvider = new ethers.providers.JsonRpcProvider(skaleTestnet.rpcUrls.default)
 const schainSigner = new Wallet(process.env.BADGE_MINTER_PRIVATE_KEY!).connect(schainProvider)
 
@@ -33,6 +37,8 @@ export default async function handler(
   const address = JSON.parse(req.body).address
   const balance = await fetchBalance(address)
   if (balance.gte(threshold)) {
+    // fake succeeding transaction:
+    // return res.status(201).json({ transactionId: '0xae42443d5b97530465d8a513c19a4f27b25cd7708f37da4d648fda557ced8c9a'})
     const boa = new BadgeOfAssembly__factory(schainSigner).attach(BADGE_OF_ASSEMBLY_ADDRESS)
     const tx = await boa.mint(address, 1, 1)
     console.log('to', address,'txid: ', tx.hash)

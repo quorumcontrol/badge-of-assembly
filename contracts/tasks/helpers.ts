@@ -5,7 +5,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 export async function getBadgeOfAssemblyContract(
   hre: HardhatRuntimeEnvironment
 ) {
-  console.log('using network: ', hre.network.name)
+  console.log("using network: ", hre.network.name);
   const deploy = await import(
     `../deployments/${hre.network.name}/BadgeOfAssembly.json`
   );
@@ -28,3 +28,13 @@ task("owner").setAction(async (_, hre) => {
   console.log("owner: ", owner);
   console.log("deployer", (await hre.ethers.getSigners())[0]);
 });
+
+task("allow")
+  .addParam("id", "the token id")
+  .addParam("newMinter")
+  .setAction(async ({ id, newMinter }, hre) => {
+    const boa = await getBadgeOfAssemblyContract(hre);
+    const tx = await boa.setMinterAccess(id, newMinter, true);
+    console.log("tx id:", tx.hash);
+    await tx.wait();
+  });
