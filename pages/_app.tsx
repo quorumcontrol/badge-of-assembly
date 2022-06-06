@@ -10,7 +10,6 @@ import {
   darkTheme,
 } from "@rainbow-me/rainbowkit";
 import {
-  chain as namedChains,
   configureChains,
   createClient,
   WagmiConfig,
@@ -18,16 +17,18 @@ import {
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Script from "next/script";
-
-import { skaleTestnet } from "../hooks/utils/SkaleChains";
+import { skaleTestnet, skaleMainnet } from "../hooks/utils/SkaleChains";
+import isTestnet from "../hooks/utils/isTestnet";
 
 const { chains, provider } = configureChains(
-  [skaleTestnet],
+  isTestnet ? [skaleTestnet] : [skaleMainnet],
   [
     jsonRpcProvider({
       rpc: (chain) => {
         switch (chain.id) {
           case skaleTestnet.id:
+            return { http: chain.rpcUrls.default };
+          case skaleMainnet.id:
             return { http: chain.rpcUrls.default };
           default:
             return null;

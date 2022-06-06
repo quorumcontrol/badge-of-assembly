@@ -20,3 +20,23 @@ export const skaleTestnet: Chain = {
   },
   testnet: true,
 };
+
+export const skaleMainnet: Chain = {
+  id: 1504146280,
+  name: 'Crypto Rome Network',
+  network: 'cryptorome',
+  iconUrl: skaleLogo.path,
+  iconBackground: '#fff',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'sFUEL',
+    symbol: 'FUEL',
+  },
+  rpcUrls: {
+    default: 'https://mainnet.skalenodes.com/v1/right-doting-spica',
+  },
+  blockExplorers: {
+    default: { name: 'BlockScout', url: 'https://right-doting-spica.explorer.mainnet.skalenodes.com/' },
+  },
+  testnet: false,
+}

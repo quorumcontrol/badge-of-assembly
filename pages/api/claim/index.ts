@@ -6,9 +6,9 @@ import { chain } from "wagmi";
 import { Skl__factory } from '../../../eth-sdk/contracts'
 import { BadgeOfAssembly__factory } from "../../../contracts/typechain";
 import { BADGE_OF_ASSEMBLY_ADDRESS } from "../../../hooks/BadgeOfAssembly";
-import { skaleTestnet } from '../../../hooks/utils/SkaleChains'
-
-const SKL_ADDRESS = "0x00c83aeCC790e8a4453e5dD3B0B4b3680501a7A7";
+import { skaleMainnet, skaleTestnet } from '../../../hooks/utils/SkaleChains'
+import { BOA_ADDRESS } from "../../../hooks/useSKLBalance";
+import isTestnet from "../../../hooks/utils/isTestnet";
 
 const mainnetProvider = new ethers.providers.AlchemyProvider(
   chain.mainnet.id,
@@ -19,14 +19,16 @@ if (!process.env.BADGE_MINTER_PRIVATE_KEY) {
   throw new Error("must have a badge minter private key")
 }
 
-const skl = Skl__factory.connect(SKL_ADDRESS, mainnetProvider)
+const skl = Skl__factory.connect(BOA_ADDRESS, mainnetProvider)
 
-const schainProvider = new ethers.providers.JsonRpcProvider(skaleTestnet.rpcUrls.default)
+const rpcUrl = isTestnet ? skaleTestnet.rpcUrls.default : skaleMainnet.rpcUrls.default
+
+const schainProvider = new ethers.providers.JsonRpcProvider(rpcUrl)
 const schainSigner = new Wallet(process.env.BADGE_MINTER_PRIVATE_KEY!).connect(schainProvider)
 
 const fetchBalance = async (address: string) => {
   console.log('fetch balance for: ', address)
-  const balance = await mainnetProvider.send('alchemy_getTokenBalances', [address, [SKL_ADDRESS]])
+  const balance = await mainnetProvider.send('alchemy_getTokenBalances', [address, [BOA_ADDRESS]])
   return BigNumber.from(balance.tokenBalances[0].tokenBalance)
 }
 
