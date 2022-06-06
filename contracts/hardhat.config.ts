@@ -46,7 +46,7 @@ const config: HardhatUserConfig = {
         process.env.MUMBAI_PRIVATE_KEY !== undefined
           ? [process.env.MUMBAI_PRIVATE_KEY]
           : [],
-      tags: ['testpolygon', 'test']
+      tags: ["testpolygon", "test"],
     },
     matic: {
       url: "https://polygon-rpc.com/",
@@ -55,12 +55,21 @@ const config: HardhatUserConfig = {
           ? [process.env.POLYGON_PRIVATE_KEY]
           : [],
     },
+    skale: {
+      url: "https://mainnet.skalenodes.com/v1/right-doting-spica",
+      accounts: [process.env.BADGE_MINTER_PRIVATE_KEY].filter(
+        (k) => !!k
+      ) as string[],
+      tags: ["mainnet"],
+    },
     skaletest: {
       url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
       // gasPrice: 0,
-      accounts:
-        [process.env.SKALE_TEST_PRIVATE_KEY, process.env.BADGE_MINTER_PRIVATE_KEY].filter((k) => !!k) as string[],
-      tags: ['test', 'testskale']
+      accounts: [
+        process.env.SKALE_TEST_PRIVATE_KEY,
+        process.env.BADGE_MINTER_PRIVATE_KEY,
+      ].filter((k) => !!k) as string[],
+      tags: ["test", "testskale"],
     },
   },
 };

@@ -1,5 +1,5 @@
 import "@nomiclabs/hardhat-ethers";
-import { providers } from "ethers";
+import { providers, Signer } from "ethers";
 import { utils } from "ethers";
 import { formatEther } from "ethers/lib/utils";
 import { task } from "hardhat/config";
@@ -21,3 +21,10 @@ task("fund")
     const bal = await signer.getBalance();
     console.log("balance remaining: ", formatEther(bal));
   });
+
+task("balance").setAction(async (_, hre) => {
+  const signer = (await hre.ethers.getSigners())[0];
+  const balance = await signer.getBalance();
+  console.log("addr: ", await signer.getAddress());
+  console.log("balance: ", utils.formatEther(balance));
+});
