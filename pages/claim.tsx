@@ -170,7 +170,7 @@ const Claim: NextPage = () => {
           autoPlay
           id="video-background"
         />
-        <HStack>
+        <HStack spacing="10">
           <Box
             borderRadius="lg"
             borderWidth="1px"
