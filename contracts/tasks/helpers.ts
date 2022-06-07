@@ -26,7 +26,7 @@ task("owner").setAction(async (_, hre) => {
   const boa = await getBadgeOfAssemblyContract(hre);
   const owner = await boa.owner();
   console.log("owner: ", owner);
-  console.log("deployer", (await hre.ethers.getSigners())[0]);
+  console.log("deployer", (await hre.ethers.getSigners())[1]);
 });
 
 task("allow")

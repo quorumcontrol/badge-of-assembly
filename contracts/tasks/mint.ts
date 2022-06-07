@@ -1,7 +1,7 @@
 import "@nomiclabs/hardhat-ethers";
 import { constants } from "ethers";
 import { task } from "hardhat/config";
-import { getBadgeOfAssemblyContract } from './helpers'
+import { getBadgeOfAssemblyContract } from "./helpers";
 
 task("setup")
   .addParam("name", "name of the badge")

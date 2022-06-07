@@ -1,46 +1,8 @@
-import { Box, Flex, Image, Spacer, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { MetadataWithId } from "../hooks/BadgeOfAssembly";
-
-function ipfsToWeb(url:string) {
-  if (!url.startsWith('ipfs://')) {
-    return url
-  }
-  return url.replace('ipfs://', 'https://cloudflare-ipfs.com/ipfs/')
-}
-
-function typeFromUrl(animationUrl: string) {
-  if (animationUrl === '') {
-    return undefined
-  }
-  if (animationUrl.includes(".mp4")) {
-    return "video/mp4";
-  }
-  if (animationUrl.includes(".webm")) {
-    return "video/webm";
-  }
-  return "video/mp4";
-}
-
-const Video: React.FC<{ animationUrl: string }> = ({ animationUrl }) => {
-  return (
-    <video
-      controls
-      autoPlay
-      loop
-      muted
-      style={{
-        minWidth: "100%",
-        maxWidth: "100%",
-        maxHeight: "100%",
-        minHeight: "100%",
-        objectFit: "contain",
-      }}
-    >
-      <source src={ipfsToWeb(animationUrl)} type={typeFromUrl(animationUrl)} />
-    </video>
-  );
-};
+import ipfsToWeb from "../hooks/utils/ipfsToWeb";
+import Video, { typeFromUrl } from "./Video";
 
 const NFTCard: React.FC<{ metadata: MetadataWithId }> = ({
   metadata: { name, description, image, animationUrl },
@@ -55,7 +17,7 @@ const NFTCard: React.FC<{ metadata: MetadataWithId }> = ({
     >
       <Box h="70%" backgroundColor="#000">
         {typeFromUrl(animationUrl) ? (
-          <Video animationUrl={animationUrl} />
+          <Video animationUrl={animationUrl} controls autoPlay loop muted />
         ) : (
           <Image
             src={ipfsToWeb(image)}

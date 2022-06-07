@@ -19,6 +19,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Script from "next/script";
 import { skaleTestnet, skaleMainnet } from "../hooks/utils/SkaleChains";
 import isTestnet from "../hooks/utils/isTestnet";
+import "../styles/video-background.css"
 
 const { chains, provider } = configureChains(
   isTestnet ? [skaleTestnet] : [skaleMainnet],

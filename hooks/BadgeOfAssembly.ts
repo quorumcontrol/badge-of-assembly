@@ -3,15 +3,19 @@ import { useMemo } from "react"
 import { useInfiniteQuery, useQuery } from "react-query"
 import { useProvider } from "wagmi"
 import { BadgeOfAssembly, BadgeOfAssembly__factory } from "../contracts/typechain"
+import isTestnet from "./utils/isTestnet"
 import ThenArg from "./utils/ThenArg"
 
-export const BADGE_OF_ASSEMBLY_ADDRESS = '0xbFB5f1E6dC0F5066cbeCe0887e618b6C65ba5240'
+const TESTNET_BOA = "0x881d822245F4d8C15Fa00a1A01BC51CDab2DD520";
+const MAINNET_BOA = "0x8D0a8C7c892211fE43ac02Dc81d25a98e1cF3E53";
+
+export const BOA_ADDRESS = isTestnet ? TESTNET_BOA : MAINNET_BOA
 
 const useBadgeOfAssembly = () => {
   const provider = useProvider()
 
   return useMemo(() => {
-    return BadgeOfAssembly__factory.connect(BADGE_OF_ASSEMBLY_ADDRESS, provider)
+    return BadgeOfAssembly__factory.connect(BOA_ADDRESS, provider)
   }, [provider])
 }
 

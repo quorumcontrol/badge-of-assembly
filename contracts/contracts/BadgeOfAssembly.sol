@@ -29,7 +29,7 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     string public _contractURI =
-        "https://badge-of-assembly.netlify.app/api/boa";
+        "https://boa.larvamaiorum.com/api/boa";
 
     IMetadataPrinter private _metadataPrinter;
     Counters.Counter private _tokenId;
@@ -39,6 +39,8 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
     mapping(uint256 => mapping(address => bool)) public minters;
 
     mapping(uint256 => mapping(address => uint256)) public mints;
+
+    mapping(uint256 => uint256) public totalSupply;
 
     constructor(address metadataPrinter, address initialOwner) ERC1155("") {
         _setupRole(CREATOR_ROLE, initialOwner);
@@ -110,6 +112,7 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         if (initialSupply > 0) {
             _mint(sender, nextId, initialSupply, "");
             _userTokens[sender].add(nextId);
+            totalSupply[nextId]++;
         }
         _badgeAdmin[sender].add(nextId);
         return nextId;
@@ -138,6 +141,7 @@ contract BadgeOfAssembly is ERC1155, AccessControl, Ownable {
         }
         mints[tokenID][to] = oldCount + amount;
         _mint(to, tokenID, amount, "");
+        totalSupply[tokenID]++;
         _userTokens[to].add(tokenID);
         return true;
     }

@@ -51,6 +51,7 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     "setup((string,string,string,string,string,uint256),uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "tokenAdminOf(address)": FunctionFragment;
+    "totalSupply(uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updateMetadata(uint256,(string,string,string,string,string,uint256))": FunctionFragment;
     "uri(uint256)": FunctionFragment;
@@ -185,6 +186,10 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "totalSupply",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
@@ -290,6 +295,10 @@ interface BadgeOfAssemblyInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "tokenAdminOf",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -584,6 +593,11 @@ export class BadgeOfAssembly extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    totalSupply(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -771,6 +785,11 @@ export class BadgeOfAssembly extends BaseContract {
 
   tokenAdminOf(user: string, overrides?: CallOverrides): Promise<BigNumber[]>;
 
+  totalSupply(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -952,6 +971,11 @@ export class BadgeOfAssembly extends BaseContract {
     ): Promise<boolean>;
 
     tokenAdminOf(user: string, overrides?: CallOverrides): Promise<BigNumber[]>;
+
+    totalSupply(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
@@ -1297,6 +1321,11 @@ export class BadgeOfAssembly extends BaseContract {
 
     tokenAdminOf(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    totalSupply(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1478,6 +1507,11 @@ export class BadgeOfAssembly extends BaseContract {
 
     tokenAdminOf(
       user: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    totalSupply(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
