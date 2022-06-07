@@ -7,7 +7,7 @@ import isTestnet from "./utils/isTestnet"
 import ThenArg from "./utils/ThenArg"
 
 const TESTNET_BOA = "0x4880bc3CCced192901269520C750BfF5B425a39b";
-const MAINNET_BOA = "0x8D0a8C7c892211fE43ac02Dc81d25a98e1cF3E53";
+const MAINNET_BOA = "0x20e5F6be35d42037Ced33bD20Fd1F2d3Eb67ec20";
 
 export const BOA_ADDRESS = isTestnet ? TESTNET_BOA : MAINNET_BOA
 
