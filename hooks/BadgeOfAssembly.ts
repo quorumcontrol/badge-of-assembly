@@ -6,7 +6,7 @@ import { BadgeOfAssembly, BadgeOfAssembly__factory } from "../contracts/typechai
 import isTestnet from "./utils/isTestnet"
 import ThenArg from "./utils/ThenArg"
 
-const TESTNET_BOA = "0x881d822245F4d8C15Fa00a1A01BC51CDab2DD520";
+const TESTNET_BOA = "0x4880bc3CCced192901269520C750BfF5B425a39b";
 const MAINNET_BOA = "0x8D0a8C7c892211fE43ac02Dc81d25a98e1cF3E53";
 
 export const BOA_ADDRESS = isTestnet ? TESTNET_BOA : MAINNET_BOA
