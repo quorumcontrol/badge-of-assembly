@@ -9,17 +9,13 @@ import {
   RainbowKitProvider,
   darkTheme,
 } from "@rainbow-me/rainbowkit";
-import {
-  configureChains,
-  createClient,
-  WagmiConfig,
-} from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Script from "next/script";
 import { skaleTestnet, skaleMainnet } from "../hooks/utils/SkaleChains";
 import isTestnet from "../hooks/utils/isTestnet";
-import "../styles/video-background.css"
+import "../styles/video-background.css";
 
 const { chains, provider } = configureChains(
   isTestnet ? [skaleTestnet] : [skaleMainnet],
@@ -99,6 +95,34 @@ function MyApp({ Component, pageProps }: AppProps) {
                 key="ogsitename"
               />
               <link rel="icon" href="/favicon.ico" />
+              <meta
+                name="description"
+                content="Generate badges for the warriors attending your events."
+              />
+              <link rel="icon" href="/favicon.ico" />
+              <meta
+                property="og:title"
+                content="Crypto Colosseum: Badge of Assembly"
+                key="ogtitle"
+              />
+              <meta
+                property="og:description"
+                content="Generate badges for the warriors attending your events."
+                key="ogdesc"
+              />
+
+              <meta name="twitter:card" content="summary" key="twcard" />
+              <meta
+                name="twitter:creator"
+                content="@larva_maiorum"
+                key="twhandle"
+              />
+
+              <meta
+                property="og:url"
+                content="https://boa.larvamaiorum.com"
+                key="ogurl"
+              />
             </Head>
             <Script
               strategy="afterInteractive"

@@ -3,7 +3,7 @@ import {
   Spinner,
   Text,
   Box,
-  HStack,
+  Stack,
   Heading,
   VStack,
   Link,
@@ -170,7 +170,7 @@ const Claim: NextPage = () => {
           autoPlay
           id="video-background"
         />
-        <HStack spacing="10">
+        <Stack direction={['column', 'row']} spacing='10'>
           <Box
             borderRadius="lg"
             borderWidth="1px"
@@ -226,7 +226,7 @@ const Claim: NextPage = () => {
               </Box>
             </VStack>
           </Box>
-        </HStack>
+        </Stack>
       </Layout>
     </>
   );

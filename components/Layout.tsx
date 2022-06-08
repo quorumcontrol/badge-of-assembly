@@ -4,7 +4,7 @@ import {
   VStack,
   Box,
   Heading,
-  HStack,
+  Stack,
   Spacer,
   Text,
   Link,
@@ -23,8 +23,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isClientReady = useIsClientSide();
 
   return (
-    <Container p={10} maxW="1200px">
-      <HStack spacing="5">
+    <Container p={10} maxW="1200">
+      <Stack direction={["column", "row"]} spacing="5">
         <LinkBox>
           <NextLink href="/" passHref>
             <LinkOverlay flexDir="row" display="flex" alignItems="center">
@@ -50,7 +50,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Box ml="5">
           <ConnectButton showBalance={false} />
         </Box>
-      </HStack>
+      </Stack>
 
       <VStack mt="10" spacing={5}>
         {children}

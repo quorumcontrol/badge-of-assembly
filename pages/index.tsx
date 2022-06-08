@@ -9,11 +9,6 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>Crypto Colosseum: Badge of Assembly</title>
-        <meta
-          name="description"
-          content="Generate badges for the warriors attending your events."
-        />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
         <VStack mt="50" spacing={5}>
