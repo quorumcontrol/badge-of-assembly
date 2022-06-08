@@ -12,7 +12,7 @@ const func: DeployFunction = async function ({
     from: deployer,
     gasLimit: 4000000,
     log: true,
-    deterministicDeployment: true,
+    // deterministicDeployment: true,
     args: [],
   });
 
@@ -20,7 +20,7 @@ const func: DeployFunction = async function ({
     from: deployer,
     gasLimit: 4000000,
     log: true,
-    deterministicDeployment: true,
+    // deterministicDeployment: true,
     args: [metadataPrinter.address, deployer],
   });
 };

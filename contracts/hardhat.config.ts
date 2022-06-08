@@ -56,7 +56,7 @@ const config: HardhatUserConfig = {
           : [],
     },
     skale: {
-      url: "https://mainnet.skalenodes.com/v1/right-doting-spica",
+      url: "https://mainnet.skalenodes.com/v1/haunting-devoted-deneb",
       accounts: [process.env.BADGE_MINTER_PRIVATE_KEY].filter(
         (k) => !!k
       ) as string[],

@@ -22,7 +22,7 @@ export const skaleTestnet: Chain = {
 };
 
 export const skaleMainnet: Chain = {
-  id: 1504146280,
+  id: 1032942172,
   name: 'Crypto Rome Network',
   network: 'cryptorome',
   iconUrl: skaleLogo.path,
@@ -33,10 +33,10 @@ export const skaleMainnet: Chain = {
     symbol: 'FUEL',
   },
   rpcUrls: {
-    default: 'https://mainnet.skalenodes.com/v1/right-doting-spica',
+    default: 'https://mainnet.skalenodes.com/v1/haunting-devoted-deneb',
   },
   blockExplorers: {
-    default: { name: 'BlockScout', url: 'https://right-doting-spica.explorer.mainnet.skalenodes.com/' },
+    default: { name: 'BlockScout', url: 'https://haunting-devoted-deneb.explorer.mainnet.skalenodes.com/' },
   },
   testnet: false,
 }
