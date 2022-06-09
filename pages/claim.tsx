@@ -201,6 +201,14 @@ const Claim: NextPage = () => {
               {canClaim && isFetched && accountData && (
                 <ClaimButton address={accountData.address!} onSuccess={() => setDidMint(true)} />
               )}
+              <Box>
+                <Text fontSize="sm">
+                  Trouble connecting your wallet?{" "}
+                  <NextLink passHref href="/chainInfo">
+                    <Link textDecoration="underline">See here.</Link>
+                  </NextLink>
+                </Text>
+              </Box>
             </VStack>
           </Box>
           <Box

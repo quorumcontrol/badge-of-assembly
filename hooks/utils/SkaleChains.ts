@@ -10,7 +10,7 @@ export const skaleTestnet: Chain = {
   nativeCurrency: {
     decimals: 18,
     name: 'sFUEL',
-    symbol: 'FUEL',
+    symbol: 'sFUEL',
   },
   rpcUrls: {
     default: 'https://testnet-proxy.skalenodes.com/v1/whispering-turais',
@@ -30,7 +30,7 @@ export const skaleMainnet: Chain = {
   nativeCurrency: {
     decimals: 18,
     name: 'sFUEL',
-    symbol: 'FUEL',
+    symbol: 'sFUEL',
   },
   rpcUrls: {
     default: 'https://mainnet.skalenodes.com/v1/haunting-devoted-deneb',

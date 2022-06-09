@@ -39,8 +39,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <NextLink href="/mint" passHref>
           <Link>mint</Link>
         </NextLink>
-        <NextLink href="/browse" passHref>
-          <Link>all</Link>
+        <NextLink href="/claim" passHref>
+          <Link>claim</Link>
         </NextLink>
         {isClientReady && isSuccess && data?.address && (
           <NextLink href={`/browse/${data?.address}`} passHref>
