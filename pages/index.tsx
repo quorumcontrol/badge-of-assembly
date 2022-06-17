@@ -16,7 +16,7 @@ const Home: NextPage = () => {
           <Text>Show support for your community.</Text>
           <Box pt="16">
             <Link href="/claim">
-              <Button variant="solid">Claim your Antiqui Posessor</Button>
+              <Button variant="solid">Claim Your Badges</Button>
             </Link>
           </Box>
         </VStack>
