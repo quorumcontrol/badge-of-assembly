@@ -44,7 +44,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </NextLink>
         {isClientReady && isSuccess && data?.address && (
           <NextLink href={`/browse/${data?.address}`} passHref>
-            <Link>mine</Link>
+            <Link>my badges</Link>
           </NextLink>
         )}
         <Box ml="5">

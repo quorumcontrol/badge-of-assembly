@@ -15,11 +15,11 @@ import NextLink from "next/link";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { useAccount, useWaitForTransaction } from "wagmi";
-import Layout from "../components/Layout";
-import Video from "../components/Video";
-import useIsClientSide from "../hooks/useIsClientSide";
-import useSKLBalance from "../hooks/useSKLBalance";
-import humanFormatted from "../hooks/utils/humanFormatted";
+import Layout from "../../components/Layout";
+import Video from "../../components/Video";
+import useIsClientSide from "../../hooks/useIsClientSide";
+import useSKLBalance from "../../hooks/useSKLBalance";
+import humanFormatted from "../../hooks/utils/humanFormatted";
 
 const threshold = parseEther("1000");
 
