@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "extra-abi": "typechain --target ethers-v5 --out-dir components/types './europaAbis/*.json'"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.1.2",
