@@ -13,25 +13,29 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import Layout from "../../components/Layout";
 import Video from "../../components/Video";
+import { useHasBoughtSkale } from "../../hooks/europaChain";
 import useIsClientSide from "../../hooks/useIsClientSide";
 
 const threshold = parseEther("1000");
 
 const ClaimButton: React.FC<{
   address: string;
+  txHash: string;
   onSuccess?: (txId?: string) => any;
-}> = ({ address, onSuccess }) => {
+}> = ({ address, onSuccess, txHash }) => {
   const [transactionId, setTransactionId] = useState("");
   const [err, setErr] = useState<string | undefined>(undefined);
-  const mutation = useMutation<Response, unknown, { address: string }, unknown>(
+  
+  const mutation = useMutation<Response, unknown, { address: string, txHash: string }, unknown>(
     "claim-badge",
-    ({ address }) => {
-      return fetch("/api/claim/ruby", {
-        body: JSON.stringify({ address }),
+    ({ address, txHash }) => {
+      console.log('fetching: ', txHash, 'for', address)
+      return fetch("/api/claim/enjoyooor", {
+        body: JSON.stringify({ address, txHash }),
         method: "post",
       });
     },
@@ -101,31 +105,18 @@ const ClaimButton: React.FC<{
     <Button
       variant="solid"
       size="lg"
-      onClick={() => mutation.mutate({ address })}
+      onClick={() => mutation.mutate({ address, txHash })}
     >
       Claim Badge
     </Button>
   );
 };
 
-const hasTransacted = async (address: string) => {
-  const resp = await fetch(`https://elated-tan-skat.explorer.mainnet.skalenodes.com/api?module=account&action=txlist&address=${address}`)
-  if (resp.status !== 200) {
-    throw new Error('bad response')
-  }
-  const result = await resp.json()
-  return result.result.length > 0
-}
-
-const ClaimRuby: NextPage = () => {
+const ClaimEnjoyooor: NextPage = () => {
   const { address } = useAccount();
   const isDomReady = useIsClientSide();
 
-  const { data:canClaim, isFetched } = useQuery('europa-transactions', () => {
-    return hasTransacted(address!)
-  }, {
-    enabled: !!address,
-  })
+  const { data: txHash, isFetched } = useHasBoughtSkale(address)
 
   const [didMint, setDidMint] = useState(false);
 
@@ -133,8 +124,8 @@ const ClaimRuby: NextPage = () => {
     return (
       <>
         <Head>
-          <title>Badge of Assembly: Claim Ruby Genesis</title>
-          <meta name="description" content="Claim your Ruby Genesis badge" />
+          <title>Badge of Assembly: Claim SKL Enjoyooor</title>
+          <meta name="description" content="Claim your SKL Enjoyooor badge" />
         </Head>
         <Layout>
           <Spinner />
@@ -172,7 +163,7 @@ const ClaimRuby: NextPage = () => {
     <>
       <Head>
         <title>Badge of Assembly: Claim</title>
-        <meta name="description" content="Claim your Ruby Genesis" />
+        <meta name="description" content="Claim your SKL Enjoyooor" />
       </Head>
       <Layout>
         <Video
@@ -198,16 +189,16 @@ const ClaimRuby: NextPage = () => {
               </Box>
               <Box>
                 <Heading fontSize="md">Required to claim</Heading>
-                <Text fontSize="md">Your address has done a transaction on Europa.</Text>
+                <Text fontSize="md">You bought $SKL on Ruby Exchange in the last 3 days.</Text>
               </Box>
               <Box>
                 <Heading fontSize="md">Qualified?</Heading>
                 {!isFetched && <Spinner />}
-                {isFetched && <Text fontSize="md">{canClaim ? "Yes" : "No"}</Text>}
+                {isFetched && <Text fontSize="md">{txHash ? "Yes" : "No"}</Text>}
               </Box>
 
-              {canClaim && isFetched && address && (
-                <ClaimButton address={address} onSuccess={() => setDidMint(true)} />
+              {txHash && isFetched && address && (
+                <ClaimButton address={address} txHash={txHash} onSuccess={() => setDidMint(true)} />
               )}
               <Box>
                 <Text fontSize="sm">
@@ -229,7 +220,7 @@ const ClaimRuby: NextPage = () => {
           >
             <VStack align="left" spacing="10">
               <Box>
-                <Heading fontSize="md">RUBY GENESIS</Heading>
+                <Heading fontSize="md">SKALE Enjoyooor</Heading>
               </Box>
               <Box>
                 <Video
@@ -237,7 +228,7 @@ const ClaimRuby: NextPage = () => {
                   autoPlay
                   loop
                   controls={false}
-                  animationUrl="ipfs://bafybeihze2e6pzygreosakvcemomkvorbtlqazdp2ovjx5qzxcalrt44lm"
+                  animationUrl="ipfs://bafybeiefqqlksz3hx6r2omyga5l26caiupg32n6t752qkoinkg46fq2e7q"
                 />
               </Box>
             </VStack>
@@ -248,4 +239,4 @@ const ClaimRuby: NextPage = () => {
   );
 };
 
-export default ClaimRuby;
+export default ClaimEnjoyooor;

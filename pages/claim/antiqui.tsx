@@ -198,8 +198,8 @@ const Claim: NextPage = () => {
                 </Text>
               </Box>
 
-              {canClaim && isFetched && accountData && (
-                <ClaimButton address={accountData.address!} onSuccess={() => setDidMint(true)} />
+              {canClaim && address && (
+                <ClaimButton address={address!} onSuccess={() => setDidMint(true)} />
               )}
               <Box>
                 <Text fontSize="sm">

@@ -79,6 +79,39 @@ const ChainInfo: NextPage = () => {
               </NextLink>
             </VStack>
           </Box>
+          <Box
+            borderRadius="lg"
+            borderWidth="1px"
+            w="sm"
+            h="md"
+            overflow="hidden"
+          >
+            <Box h="70%" backgroundColor="#000">
+                <Video
+                  animationUrl="ipfs://bafybeiefqqlksz3hx6r2omyga5l26caiupg32n6t752qkoinkg46fq2e7q"
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                />
+            </Box>
+            <VStack p="5" mb="5">
+              <Text
+                mt="4"
+                fontWeight="semibold"
+                as="h4"
+                lineHeight="tight"
+                noOfLines={1}
+              >
+                SKALE Enjoyooor
+              </Text>
+              <NextLink passHref href="/claim/enjoyooor">
+                <Link>
+                  <Button>Claim</Button>
+                </Link>
+              </NextLink>
+            </VStack>
+          </Box>
         </Stack>
       </Layout>
     </>
