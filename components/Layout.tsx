@@ -19,7 +19,7 @@ import { useAccount } from "wagmi";
 import useIsClientSide from "../hooks/useIsClientSide";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { data, isSuccess } = useAccount();
+  const { address, isConnected:isSuccess } = useAccount();
   const isClientReady = useIsClientSide();
 
   return (
@@ -42,8 +42,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <NextLink href="/claim" passHref>
           <Link>claim</Link>
         </NextLink>
-        {isClientReady && isSuccess && data?.address && (
-          <NextLink href={`/browse/${data?.address}`} passHref>
+        {isClientReady && isSuccess && address && (
+          <NextLink href={`/browse/${address}`} passHref>
             <Link>my badges</Link>
           </NextLink>
         )}

@@ -118,13 +118,13 @@ const hasTransacted = async (address: string) => {
 }
 
 const ClaimRuby: NextPage = () => {
-  const { data: accountData } = useAccount();
+  const { address } = useAccount();
   const isDomReady = useIsClientSide();
 
   const { data:canClaim, isFetched } = useQuery('europa-transactions', () => {
-    return hasTransacted(accountData!.address!)
+    return hasTransacted(address!)
   }, {
-    enabled: !!accountData,
+    enabled: !!address,
   })
 
   const [didMint, setDidMint] = useState(false);
@@ -157,8 +157,8 @@ const ClaimRuby: NextPage = () => {
           </Box>
           <Text>
             Your badge is in your wallet. See it on{" "}
-            {isDomReady && isFetched && accountData?.address && (
-              <Link href={`/browse/${accountData?.address}`} textDecoration="underline">
+            {isDomReady && isFetched && address && (
+              <Link href={`/browse/${address}`} textDecoration="underline">
                 your personal page.
               </Link>
             )}
@@ -206,8 +206,8 @@ const ClaimRuby: NextPage = () => {
                 {isFetched && <Text fontSize="md">{canClaim ? "Yes" : "No"}</Text>}
               </Box>
 
-              {canClaim && isFetched && accountData && (
-                <ClaimButton address={accountData.address!} onSuccess={() => setDidMint(true)} />
+              {canClaim && isFetched && address && (
+                <ClaimButton address={address} onSuccess={() => setDidMint(true)} />
               )}
               <Box>
                 <Text fontSize="sm">

@@ -111,8 +111,8 @@ const ClaimButton: React.FC<{
 };
 
 const Claim: NextPage = () => {
-  const { data: accountData, isFetched } = useAccount();
-  const { data } = useSKLBalance(accountData?.address);
+  const { address, isConnected:isSuccess } = useAccount();
+  const { data } = useSKLBalance(address);
   const isDomReady = useIsClientSide();
   const canClaim = data && data.total.gte(threshold);
   const [didMint, setDidMint] = useState(false);
@@ -145,8 +145,8 @@ const Claim: NextPage = () => {
           </Box>
           <Text>
             Your badge is in your wallet. See it on{" "}
-            {isDomReady && isFetched && accountData?.address && (
-              <Link href={`/browse/${accountData?.address}`} textDecoration="underline">
+            {isDomReady && isSuccess && address && (
+              <Link href={`/browse/${address}`} textDecoration="underline">
                 your personal page.
               </Link>
             )}
