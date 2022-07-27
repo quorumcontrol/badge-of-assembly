@@ -21,7 +21,7 @@ task("setup")
           name,
           description,
           image,
-          animationUrl,
+          animationUrl: animationUrl || "",
           youtubeUrl: youtubeUrl || "",
           maxPerWallet: maxPerWallet || 0,
         },
